@@ -26,6 +26,11 @@ namespace CollectionLinqAssignment
             //Use LINQ to find and return all even numbers back. Note the method return type
             //Also return empty array if the input is null.
 
+            if(numbers == null)
+            {
+                return new int[0];
+            }
+
             var evenNumbers = numbers.Where(x => x % 2 == 0).ToArray();
 
             var tasaLuvut = new List<int>();
@@ -54,7 +59,23 @@ namespace CollectionLinqAssignment
             //Use LINQ to find all strings that start with the letter 'A' and return them.
             //Also return empty list if the input is null.
 
-            throw new NotImplementedException();
+            if (strings == null)
+            {
+                return new List<string>();
+            }
+
+            var stringStartsWithA = strings.Where(x => x.StartsWith("A")).ToArray();
+
+            var stringList = new List<string>();
+
+            if (stringStartsWithA.Length > 0)
+            {
+                stringList.AddRange(stringStartsWithA);
+            }
+            return stringList;
+
+               
+
         }
 
         /// <summary>
