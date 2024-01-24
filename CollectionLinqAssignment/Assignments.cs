@@ -253,6 +253,7 @@ namespace CollectionLinqAssignment
             // Checks if the input list is null
             if (schools == null)
             {
+                return new List<Student>();
                 throw new ArgumentNullException(nameof(schools));
             }
 
@@ -349,6 +350,17 @@ namespace CollectionLinqAssignment
 
         public static List<School> SchoolsWithTopGrades(List<School> schools)
         {
+            if (schools == null)
+            {
+                return new List<School>();
+            }
+
+            List<School> result = schools
+                .Where(school => school.Students.Any(student => student.Grade > 90))
+                .ToList();
+
+            return result;
+        }
             //8. LINQ with Complex Objects
             //+-------------------------------------------------------------+
             //| OBJECTIVE:                                                  |
@@ -379,12 +391,8 @@ namespace CollectionLinqAssignment
             //+-------------------------------------------------------------+
             //Also return empty list if the input is null.
 
-            throw new NotImplementedException();
 
-
-        }
-
-        public static Dictionary<string, double> CalculateAverageScores(List<Student> students)
+            public static Dictionary<string, double> CalculateAverageScores(List<Student> students)
         {
             // 9. Calculating Averages with LINQ
             // +-------------------------------------------------------------+
@@ -429,6 +437,44 @@ namespace CollectionLinqAssignment
                 .ToDictionary(x => x.StudentName, x => x.AverageScore);
         }
 
+
+
+
+
+
+        // 10. Finding Top Performers in Each Subject with LINQ
+        // +-------------------------------------------------------------+
+        // | OBJECTIVE:                                                  |
+        // | Use LINQ to find the top performers in each subject across  |
+        // | multiple schools.                                           |
+        // |                                                            |
+        // | TASK:                                                      |
+        // | Given a list of schools where each school has a Name and a  |
+        // | list of Students (each student having Name, Subject, and    |
+        // | Grade), find the top performer in each subject across all   |
+        // | schools.                                                    |
+        // |                                                            |
+        // | SAMPLE DATA:                                               |
+        // | Schools: HighSchool A, HighSchool B                         |
+        // | HighSchool A Students:                                     |
+        // | +------+--------+-------+                                  |
+        // | | Name | Subject| Grade |                                  |
+        // | +------+--------+-------+                                  |
+        // | | Eva  | Math   | 91    |                                  |
+        // | | Frank| Science| 85    |                                  |
+        // |                                                            |
+        // | HighSchool B Students:                                     |
+        // | +------+--------+-------+                                  |
+        // | | Name | Subject| Grade |                                  |
+        // | | Grace| Math   | 95    |                                  |
+        // | | Helen| Science| 89    |                                  |
+        // |                                                            |
+        // | EXPECTED OUTPUT:                                           |
+        // | {"Math": Grace, "Science": Eva}                            |
+        // +-------------------------------------------------------------+
+        // Return an empty dictionary if the input is null to handle null inputs gracefully.
+        //Hint: Use SelectMany()
+        // Flatten the list of subjects across all students and schools, and then group them by the subject name.
         public static Dictionary<string, Student> FindTopPerformersInEachSubject(List<School> schools)
         {
             if (schools == null)
@@ -454,41 +500,6 @@ namespace CollectionLinqAssignment
 
             // Return the dictionary of top performers in each subject
             return topPerformers;
-
-            // 10. Finding Top Performers in Each Subject with LINQ
-            // +-------------------------------------------------------------+
-            // | OBJECTIVE:                                                  |
-            // | Use LINQ to find the top performers in each subject across  |
-            // | multiple schools.                                           |
-            // |                                                            |
-            // | TASK:                                                      |
-            // | Given a list of schools where each school has a Name and a  |
-            // | list of Students (each student having Name, Subject, and    |
-            // | Grade), find the top performer in each subject across all   |
-            // | schools.                                                    |
-            // |                                                            |
-            // | SAMPLE DATA:                                               |
-            // | Schools: HighSchool A, HighSchool B                         |
-            // | HighSchool A Students:                                     |
-            // | +------+--------+-------+                                  |
-            // | | Name | Subject| Grade |                                  |
-            // | +------+--------+-------+                                  |
-            // | | Eva  | Math   | 91    |                                  |
-            // | | Frank| Science| 85    |                                  |
-            // |                                                            |
-            // | HighSchool B Students:                                     |
-            // | +------+--------+-------+                                  |
-            // | | Name | Subject| Grade |                                  |
-            // | | Grace| Math   | 95    |                                  |
-            // | | Helen| Science| 89    |                                  |
-            // |                                                            |
-            // | EXPECTED OUTPUT:                                           |
-            // | {"Math": Grace, "Science": Eva}                            |
-            // +-------------------------------------------------------------+
-            // Return an empty dictionary if the input is null to handle null inputs gracefully.
-            //Hint: Use SelectMany()
-            // Flatten the list of subjects across all students and schools, and then group them by the subject name.
-
 
 
         }
