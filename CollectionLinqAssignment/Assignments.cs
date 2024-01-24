@@ -492,4 +492,5 @@ namespace CollectionLinqAssignment
 
 
         }
-    }}
+    }
+}
