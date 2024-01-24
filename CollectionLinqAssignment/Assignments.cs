@@ -26,7 +26,7 @@ namespace CollectionLinqAssignment
             //Use LINQ to find and return all even numbers back. Note the method return type
             //Also return empty array if the input is null.
 
-            if(numbers == null)
+            if (numbers == null)
             {
                 return new int[0];
             }
@@ -37,7 +37,7 @@ namespace CollectionLinqAssignment
 
             foreach (var number in numbers)
             {
-                if(number % 2 == 0)
+                if (number % 2 == 0)
                     tasaLuvut.Add(number);
             }
 
@@ -74,7 +74,7 @@ namespace CollectionLinqAssignment
             }
             return stringList;
 
-               
+
 
         }
 
@@ -106,7 +106,7 @@ namespace CollectionLinqAssignment
 
             foreach (var city in cities)
             {
-                if(city.Value >= 100000)
+                if (city.Value >= 100000)
                     yliMiljoona.Add(city.Key, city.Value);
             }
 
@@ -131,7 +131,15 @@ namespace CollectionLinqAssignment
             //Given a list of products with properties Name, Price, and Category, use LINQ to find all products in the "Electronics" category with a price less than $100.
             //Also return empty list if the input is null.
 
-            throw new NotImplementedException();
+
+            if (products == null)
+            {
+                return new List<Product>();
+            }
+
+            var filteredProducts = products.Where(p => p.Category == "Electronics" && p.Price < 100).ToList();
+
+            return filteredProducts;
         }
 
 
@@ -158,8 +166,24 @@ namespace CollectionLinqAssignment
             //Also return empty list if the input is null.
             //
             //Hint: Use the new keyword to create an anonymous type. and check Select() method.
-            throw new NotImplementedException();
+
+            // Tarkistetaan, onko syöte null, ja palautetaan tyhjä lista tarvittaessa.
+            if (people == null)
+            {
+                return new List<object>();
+            }
+
+            // Käytetään LINQ-kyselyä luomaan uusi lista, jossa jokainen alkio on anonyymi tyyppi
+            // FullName = yhdistelmä etunimestä ja sukunimestä, IsAdult = ikä on 18 tai enemmän.
+            var result = people.Select(p => new
+            {
+                FullName = $"{p.FirstName} {p.LastName}",
+                IsAdult = p.Age >= 18
+            }).ToList<object>();
+
+            return result;
         }
+
 
         public class Sale
         {
@@ -175,134 +199,153 @@ namespace CollectionLinqAssignment
         /// <returns></returns>
         public static Dictionary<int, decimal> TotalAmountSoldPerProduct(List<Sale> sales)
         {
-            //6. Aggregation with LINQ
-            //| OBJECTIVE:                                                  |
-            //| Understand how to aggregate data using LINQ.               |
-            //|                                                            |
-            //| TASK:                                                      |
-            //| From a list of sales records with properties ProductId,    |
-            //| AmountSold, and SaleDate, find the total amount sold for   |
-            //| each product.                                              |
-            //|                                                            |
-            //| SAMPLE DATA:                                               |
-            //| +----------+------------+--------------+                    |
-            //| | ProductId| AmountSold | SaleDate     |                    |
-            //| +----------+------------+--------------+                    |
-            //| |    1     | 100.0      | 2023-08-25   |                    |
-            //| |    1     | 200.0      | 2023-08-26   |                    |
-            //| |    2     | 50.0       | 2023-08-25   |                    |
-            //| |    2     | 150.0      | 2023-08-26   |                    |
-            //| +----------+------------+--------------+                    |
-            //|                                                            |
-            //| EXPECTED OUTPUT:                                           |
-            //| +----------+------------------+                             |
-            //| | ProductId| TotalAmountSold |                             |
-            //| +----------+------------------+                             |
-            //| |    1     | 300.0           |                             |
-            //| |    2     | 200.0           |                             |
-            //| +----------+------------------+                             |
-            //+------------------------------------
-            //
-            //Hint: check GroupBy() and Sum() methods.
-            //Also return empty list if the input is null.
+            // Tarkistetaan, onko syöte null, ja palautetaan tyhjä Dictionary tarvittaessa.
+            if (sales == null)
+            {
+                return new Dictionary<int, decimal>();
+            }
 
-            throw new NotImplementedException();
+            // Käytetään LINQ-kyselyä ryhmittelemään myyntidata tuotteiden perusteella ja laskemaan kunkin tuotteen kokonaismyynti.
+            var result = sales
+                .GroupBy(s => s.ProductId)
+                .ToDictionary(
+                    group => group.Key,
+                    group => group.Sum(s => s.AmountSold)
+                );
+
+            return result;
         }
+        //6. Aggregation with LINQ
+        //| OBJECTIVE:                                                  |
+        //| Understand how to aggregate data using LINQ.               |
+        //|                                                            |
+        //| TASK:                                                      |
+        //| From a list of sales records with properties ProductId,    |
+        //| AmountSold, and SaleDate, find the total amount sold for   |
+        //| each product.                                              |
+        //|                                                            |
+        //| SAMPLE DATA:                                               |
+        //| +----------+------------+--------------+                    |
+        //| | ProductId| AmountSold | SaleDate     |                    |
+        //| +----------+------------+--------------+                    |
+        //| |    1     | 100.0      | 2023-08-25   |                    |
+        //| |    1     | 200.0      | 2023-08-26   |                    |
+        //| |    2     | 50.0       | 2023-08-25   |                    |
+        //| |    2     | 150.0      | 2023-08-26   |                    |
+        //| +----------+------------+--------------+                    |
+        //|                                                            |
+        //| EXPECTED OUTPUT:                                           |
+        //| +----------+------------------+                             |
+        //| | ProductId| TotalAmountSold |                             |
+        //| +----------+------------------+                             |
+        //| |    1     | 300.0           |                             |
+        //| |    2     | 200.0           |                             |
+        //| +----------+------------------+                             |
+        //+------------------------------------
+        //
+        //Hint: check GroupBy() and Sum() methods.
+        //Also return empty list if the input is null.
+
+
 
         public static List<Student> GetStudentsFromEachSchool(List<School> schools)
         {
-            // +-------------------------------------------------------------+
-            // | OBJECTIVE:                                                  |
-            // | Flatten nested collections and aggregate data using LINQ.   |
-            // |                                                            |
-            // | TASK:                                                      |
-            // | Given a list of schools where each school has a Name and a  |
-            // | list of Students (each student having properties like Name, |
-            // | GradeLevel, GPA, etc.), create a single list of all students|
-            // | from all the schools.                                       |
-            // |                                                            |
-            // | SAMPLE DATA:                                               |
-            // | Schools: HighSchool A, HighSchool B                        |
-            // | HighSchool A Students:                                     |
-            // | +------+------------+------+                               |
-            // | | Name | GradeLevel | GPA  |                               |
-            // | +------+------------+------+                               |
-            // | | Eva  | 11         | 3.7  |                               |
-            // | | Frank| 10         | 3.5  |                               |
-            // |                                                            |
-            // | HighSchool B Students:                                     |
-            // | +------+------------+------+                               |
-            // | | Name | GradeLevel | GPA | |
-            //
-            // | +------+------------+------+ |
-            // | | Grace | 12 | 3.8 | |
-            // | | Helen | 10 | 3.6 | |
-            // | |
-            // | EXPECTED OUTPUT: |
-            // | A combined list of all students from all schools: |
-            // | +------+------------+------+ |
-            // | | Name | GradeLevel | GPA | |
-            // | +------+------------+------+ |
-            // | | Eva | 11 | 3.7 | |
-            // | | Frank| 10 | 3.5 | |
-            // | | Grace| 12 | 3.8 | |
-            // | | Helen| 10 | 3.6 | |
-            // | +------+------------+------+ |
-            // +-------------------------------------------------------------+
-            // Hint: Use SelectMany() to flatten the list of students from all schools.
-
-            var allStudents = schools.SelectMany(x => x.Students).ToList(); 
-
-            var kasin = new List<Student>();
-
-            foreach (var school in schools)
+            // Checks if the input list is null
+            if (schools == null)
             {
-                foreach (var student in school.Students)
-                {
-                    kasin.Add(student);
-                }
+                throw new ArgumentNullException(nameof(schools));
             }
 
+            // Flattens the list of students from all schools into a single list using SelectMany
+            var allStudents = schools.SelectMany(school => school.Students).ToList();
+
             return allStudents;
-
         }
-
+        // +-------------------------------------------------------------+
+        // | OBJECTIVE:                                                  |
+        // | Flatten nested collections and aggregate data using LINQ.   |
+        // |                                                            |
+        // | TASK:                                                      |
+        // | Given a list of schools where each school has a Name and a  |
+        // | list of Students (each student having properties like Name, |
+        // | GradeLevel, GPA, etc.), create a single list of all students|
+        // | from all the schools.                                       |
+        // |                                                            |
+        // | SAMPLE DATA:                                               |
+        // | Schools: HighSchool A, HighSchool B                        |
+        // | HighSchool A Students:                                     |
+        // | +------+------------+------+                               |
+        // | | Name | GradeLevel | GPA  |                               |
+        // | +------+------------+------+                               |
+        // | | Eva  | 11         | 3.7  |                               |
+        // | | Frank| 10         | 3.5  |                               |
+        // |                                                            |
+        // | HighSchool B Students:                                     |
+        // | +------+------------+------+                               |
+        // | | Name | GradeLevel | GPA | |
+        //
+        // | +------+------------+------+ |
+        // | | Grace | 12 | 3.8 | |
+        // | | Helen | 10 | 3.6 | |
+        // | |
+        // | EXPECTED OUTPUT: |
+        // | A combined list of all students from all schools: |
+        // | +------+------------+------+ |
+        // | | Name | GradeLevel | GPA | |
+        // | +------+------------+------+ |
+        // | | Eva | 11 | 3.7 | |
+        // | | Frank| 10 | 3.5 | |
+        // | | Grace| 12 | 3.8 | |
+        // | | Helen| 10 | 3.6 | |
+        // | +------+------------+------+ |
+        // +-------------------------------------------------------------+
+        // Hint: Use SelectMany() to flatten the list of students from all schools.
 
 
 
         public static List<Student> TopStudentFromEachGrade(List<Student> students)
         {
-            //7. Grouping and Sorting with LINQ
-            //Objective: Use LINQ to group and order data. Hint: Use GroupBy and OrderBy.
-            //| OBJECTIVE:                                                  |
-            //| Use LINQ to group and order data.                           |
-            //|                                                            |
-            //| TASK:                                                      |
-            //| From a list of students with properties Name, GradeLevel,   |
-            //| and GPA, group students by GradeLevel and then sort each    |
-            //| group by GPA in descending order. Print the top student     |
-            //| from each grade level.                                      |
-            //|                                                            |
-            //| SAMPLE DATA:                                               |
-            //| +-------+------------+------+                               |
-            //| | Name  | GradeLevel | GPA  |                               |
-            //| +-------+------------+------+                               |
-            //| | Alice | 10         | 3.5  |                               |
-            //| | Bob   | 10         | 3.6  |                               |
-            //| | Charlie| 11        | 3.7  |                               |
-            //| | David | 11        | 3.8  |                               |
-            //| +-------+------------+------+                               |
-            //|                                                            |
-            //| EXPECTED OUTPUT:                                           |
-            //| Grade 10 Top Student: Bob with GPA 3.6                      |
-            //| Grade 11 Top Student: David with GPA 3.8    
-            //Also return empty list if the input is null.
+            // Check if the input list is null
+            if (students == null)
+            {
+                return new List<Student>();
+            }
 
-            throw new NotImplementedException();
-
+            // Group students by GradeLevel, then sort each group by GPA in descending order
+            // and select the top student from each group
+            var studentByGrade = students.GroupBy(x => x.GradeLevel).OrderBy(x => x.Key).Select(x => x.OrderByDescending(x => x.GPA).First()).ToList();
+            return studentByGrade;
         }
 
-        
+        //7. Grouping and Sorting with LINQ
+        //Objective: Use LINQ to group and order data. Hint: Use GroupBy and OrderBy.
+        //| OBJECTIVE:                                                  |
+        //| Use LINQ to group and order data.                           |
+        //|                                                            |
+        //| TASK:                                                      |
+        //| From a list of students with properties Name, GradeLevel,   |
+        //| and GPA, group students by GradeLevel and then sort each    |
+        //| group by GPA in descending order. Print the top student     |
+        //| from each grade level.                                      |
+        //|                                                            |
+        //| SAMPLE DATA:                                               |
+        //| +-------+------------+------+                               |
+        //| | Name  | GradeLevel | GPA  |                               |
+        //| +-------+------------+------+                               |
+        //| | Alice | 10         | 3.5  |                               |
+        //| | Bob   | 10         | 3.6  |                               |
+        //| | Charlie| 11        | 3.7  |                               |
+        //| | David | 11        | 3.8  |                               |
+        //| +-------+------------+------+                               |
+        //|                                                            |
+        //| EXPECTED OUTPUT:                                           |
+        //| Grade 10 Top Student: Bob with GPA 3.6                      |
+        //| Grade 11 Top Student: David with GPA 3.8    
+        //Also return empty list if the input is null.
+
+
+
+
 
         public static List<School> SchoolsWithTopGrades(List<School> schools)
         {
@@ -388,6 +431,30 @@ namespace CollectionLinqAssignment
 
         public static Dictionary<string, Student> FindTopPerformersInEachSubject(List<School> schools)
         {
+            if (schools == null)
+            {
+                return new Dictionary<string, Student>();
+            }
+
+
+            var groupedBySubject = schools
+                .SelectMany(school => school.Students)
+                .SelectMany(student => student.Subject.Select(subject => new { student, subject }))
+                .GroupBy(x => x.subject.Name);
+
+
+            var topPerformers = new Dictionary<string, Student>();
+
+
+            foreach (var group in groupedBySubject)
+            {
+                var topPerformer = group.OrderByDescending(x => x.subject.Score).First().student;
+                topPerformers.Add(group.Key, topPerformer);
+            }
+
+            // Return the dictionary of top performers in each subject
+            return topPerformers;
+
             // 10. Finding Top Performers in Each Subject with LINQ
             // +-------------------------------------------------------------+
             // | OBJECTIVE:                                                  |
@@ -421,9 +488,8 @@ namespace CollectionLinqAssignment
             // Return an empty dictionary if the input is null to handle null inputs gracefully.
             //Hint: Use SelectMany()
             // Flatten the list of subjects across all students and schools, and then group them by the subject name.
-          
-            throw new NotImplementedException();
-        }
 
-    }
-}
+
+
+        }
+    }}
